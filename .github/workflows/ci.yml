@@ -41,10 +41,15 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-        poetry run python -c "from hello_world import __version__; print(f'Package version: {__version__}')"  # Debug: show package version
 
     - name: Run pre-commit hooks
-      run: poetry run pre-commit run --all-files
+      run: |
+        poetry run pre-commit run --all-files
+
+    - name: Debug Poetry version
+      run: |
+        poetry build
+        poetry run python -c "from hello_world import __version__; print(f'Package version: {__version__}')"  # Debug: show package version
 
     - name: Run tests
       run: poetry run pytest tests/
