@@ -18,7 +18,9 @@ format-jinja = """
         {{ base }}+{{ distance }}
     {%- endif -%}
 """
-pattern = 'v(?P<base>\d+\.\d+\.\d+)'
+# pattern = 'v(?P<base>\d+\.\d+\.\d+)'
+style = "semver"
+pattern = "default-unprefixed"
 
 [tool.poetry-dynamic-versioning.substitution]
 files = ["*.py", "*/__init__.py", "*/__version__.py", "*/_version.py"]
