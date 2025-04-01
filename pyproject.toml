@@ -4,7 +4,7 @@ description = "A Hello World package for cloud builds and git hooks"
 authors = ["Your Name <your.email@example.com>"]
 readme = "README.md"
 packages = [{include = "hello_world"}]
-version = "0.0.0"
+version = "0.0.1+1"
 
 [tool.poetry-dynamic-versioning]
 enable = true
