@@ -54,7 +54,3 @@ print(say_hello("Alice"))  # Output: Hello, Alice!
 - `isort`: Import sorting
 - `pytest`: Testing framework
 - `pre-commit`: Git hooks management
-
-## License
-
-MIT
