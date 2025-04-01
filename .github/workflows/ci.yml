@@ -1,10 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  - push
+  - pull_request
 
 jobs:
   build:
@@ -41,9 +39,6 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-
-    - name: Run pre-commit hooks
-      run: |
         poetry run pre-commit run --all-files
 
     - name: Debug Poetry version
@@ -59,8 +54,8 @@ jobs:
         git tag -a v1.2.3 -m "Test version"
         poetry build  # Update version in build artifacts
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [ "$VERSION" != "v1.2.3" ]; then
-          echo "Version mismatch. Expected v1.2.3, got $VERSION"
+        if [ "$VERSION" != "1.2.3" ]; then
+          echo "Version mismatch. Expected 1.2.3, got $VERSION"
           exit 1
         fi
 
@@ -71,8 +66,8 @@ jobs:
         git commit -m "Test commit"
         poetry build  # Update version in build artifacts
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [[ ! "$VERSION" =~ ^v1\.2\.3\+[0-9]+$ ]]; then
-          echo "Version mismatch. Expected v1.2.3+<number>, got $VERSION"
+        if [[ ! "$VERSION" =~ ^1\.2\.3\+[0-9]+$ ]]; then
+          echo "Version mismatch. Expected 1.2.3+<number>, got $VERSION"
           exit 1
         fi
 
@@ -81,7 +76,8 @@ jobs:
         git tag -d v1.2.3
         poetry build  # Update version in build artifacts
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [ "$VERSION" != "0.1.0" ]; then
-          echo "Version mismatch. Expected 0.1.0, got $VERSION"
+        EXPECTED=$(poetry version -s)
+        if [ "$VERSION" != "${EXPECTED}" ]; then
+          echo "Version mismatch. Expected ${EXPECTED}, got ${VERSION}"
           exit 1
         fi
