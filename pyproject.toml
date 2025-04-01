@@ -1,13 +1,10 @@
-[project]
-name = "hello-world-package"
-dynamic = ["version"]
-
 [tool.poetry]
+name = "hello-world-package"
 description = "A Hello World package for cloud builds and git hooks"
 authors = ["Your Name <your.email@example.com>"]
 readme = "README.md"
 packages = [{include = "hello_world"}]
-version = "0.0.1+1"
+version = "0.0.0"
 
 [tool.poetry-dynamic-versioning]
 enable = true
@@ -26,8 +23,8 @@ pattern = 'v(?P<base>\d+\.\d+\.\d+)'
 [tool.poetry-dynamic-versioning.substitution]
 files = ["*.py", "*/__init__.py", "*/__version__.py", "*/_version.py"]
 patterns = [
-    '''(__version__\\s*(?::.*?)?=\\s*['"])[^'"]*(['"])''',
-    { value = '''(__version_tuple__\\s*(?::.*?)?=\\s*\\()[^)]*(\\))''', mode = "tuple" },
+    '''(__version__\s*(?::.*?)?=\s*['"])[^'"]*(['"])''',
+    { value = '''(__version_tuple__\s*(?::.*?)?=\s*\()[^)]*(\))''', mode = "tuple" },
 ]
 
 [tool.poetry-dynamic-versioning.files."hello_world/_version.py"]
