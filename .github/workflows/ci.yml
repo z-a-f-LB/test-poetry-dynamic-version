@@ -15,14 +15,21 @@ jobs:
       with:
         fetch-depth: 0  # Fetch all history for git describe
 
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "github-actions@github.com"
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.12'
+        python-version: '3.11'
 
     - name: Install Poetry
       run: |
-        curl -sSL https://install.python-poetry.org | python3 -
+        python3 --version
+        curl -sSL https://install.python-poetry.org | python3 - --version 2.1.2
+        poetry --version
 
     - name: Configure Poetry
       run: |
