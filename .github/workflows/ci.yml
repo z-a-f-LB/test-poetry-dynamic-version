@@ -20,6 +20,7 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "github-actions@github.com"
+        git fetch --tags
         git describe --tags  # Debug: show current git state
 
     - name: Set up Python
