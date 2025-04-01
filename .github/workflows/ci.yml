@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for git describe
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+
+    - name: Configure Poetry
+      run: |
+        poetry config virtualenvs.create false
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run pre-commit hooks
+      run: poetry run pre-commit run --all-files
+
+    - name: Run tests
+      run: poetry run pytest tests/
+
+    - name: Test version with git tag
+      run: |
+        git tag -a v1.2.3 -m "Test version"
+        VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
+        if [ "$VERSION" != "v1.2.3" ]; then
+          echo "Version mismatch. Expected v1.2.3, got $VERSION"
+          exit 1
+        fi
+
+    - name: Test version with distance
+      run: |
+        echo "Making a commit to create distance from tag" > test.txt
+        git add test.txt
+        git commit -m "Test commit"
+        VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
+        if [[ ! "$VERSION" =~ ^v1\.2\.3\+[0-9]+$ ]]; then
+          echo "Version mismatch. Expected v1.2.3+<number>, got $VERSION"
+          exit 1
+        fi
+
+    - name: Test version without git tag
+      run: |
+        git tag -d v1.2.3
+        VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
+        if [ "$VERSION" != "0.1.0" ]; then
+          echo "Version mismatch. Expected 0.1.0, got $VERSION"
+          exit 1
+        fi
