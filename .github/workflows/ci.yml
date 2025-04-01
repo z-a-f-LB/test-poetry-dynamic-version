@@ -14,16 +14,18 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0  # Fetch all history for git describe
+        fetch-tags: true  # Fetch all tags
 
     - name: Configure Git
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "github-actions@github.com"
+        git describe --tags  # Debug: show current git state
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
 
     - name: Install Poetry
       run: |
@@ -36,7 +38,9 @@ jobs:
         poetry config virtualenvs.create false
 
     - name: Install dependencies
-      run: poetry install
+      run: |
+        poetry install
+        poetry run python -c "from hello_world import __version__; print(f'Package version: {__version__}')"  # Debug: show package version
 
     - name: Run pre-commit hooks
       run: poetry run pre-commit run --all-files
@@ -46,10 +50,10 @@ jobs:
 
     - name: Test version with git tag
       run: |
-        git tag -a v99.98.96 -m "Test version"
+        git tag -a v1.2.3 -m "Test version"
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [ "$VERSION" != "v99.98.97" ]; then
-          echo "Version mismatch. Expected v99.98.97, got $VERSION"
+        if [ "$VERSION" != "v1.2.3" ]; then
+          echo "Version mismatch. Expected v1.2.3, got $VERSION"
           exit 1
         fi
 
@@ -59,16 +63,16 @@ jobs:
         git add test.txt
         git commit -m "Test commit"
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [[ ! "$VERSION" =~ ^v99\.98\.97\+[0-9]+$ ]]; then
-          echo "Version mismatch. Expected v99.98.97+<number>, got $VERSION"
+        if [[ ! "$VERSION" =~ ^v1\.2\.3\+[0-9]+$ ]]; then
+          echo "Version mismatch. Expected v1.2.3+<number>, got $VERSION"
           exit 1
         fi
 
     - name: Test version without git tag
       run: |
-        git tag -d v99.98.97
+        git tag -d v1.2.3
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [ "$VERSION" != "0.0.0+placeholder" ]; then
-          echo "Version mismatch. Expected 0.0.0+placeholder, got $VERSION"
+        if [ "$VERSION" != "0.1.0" ]; then
+          echo "Version mismatch. Expected 0.1.0, got $VERSION"
           exit 1
         fi

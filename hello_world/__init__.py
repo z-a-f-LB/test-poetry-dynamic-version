@@ -2,7 +2,10 @@
 Hello World package for cloud builds and git hooks.
 """
 
-__version__ = "0.0.0"
+try:
+    from ._version import __version__
+except ImportError:
+    __version__ = "0.0.0"
 
 
 def say_hello(name: str = "World") -> str:

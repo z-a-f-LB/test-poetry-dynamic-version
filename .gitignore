@@ -1,3 +1,6 @@
+# Versions
+hello_world/_version.py
+
 # Python
 __pycache__/
 *.py[cod]

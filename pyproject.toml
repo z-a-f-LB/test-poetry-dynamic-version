@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "hello-world-package"
-version = "0.0.0"  # Placeholder version -- real version is set by git tags
 description = "A Hello World package for cloud builds and git hooks"
 authors = ["Your Name <your.email@example.com>"]
 readme = "README.md"
 packages = [{include = "hello_world"}]
+version = "0.0.0"
 
 [tool.poetry-dynamic-versioning]
 enable = true
@@ -23,15 +23,23 @@ pattern = 'v(?P<base>\d+\.\d+\.\d+)'
 [tool.poetry-dynamic-versioning.substitution]
 files = ["*.py", "*/__init__.py", "*/__version__.py", "*/_version.py"]
 patterns = [
-    { value = '''(^__version__\s*(?::.*?)?=\s*['"])[^'"]*(['"])''', mode = "str" },
-    { value = '''(^__version_tuple__\s*(?::.*?)?=\s*\()[^)]*(\))''', mode = "tuple" },
+    '''(__version__\s*(?::.*?)?=\s*['"])[^'"]*(['"])''',
+    { value = '''(__version_tuple__\s*(?::.*?)?=\s*\()[^)]*(\))''', mode = "tuple" },
 ]
+
+[tool.poetry-dynamic-versioning.files."hello_world/_version.py"]
+persistent-substitution = true
+initial-content = """
+  # These version placeholders will be replaced later during substitution.
+  __version__ = "0.0.0"
+  __version_tuple__ = (0, 0, 0)
+"""
 
 [tool.poetry.requires-plugins]
 poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
