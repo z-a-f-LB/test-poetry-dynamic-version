@@ -46,10 +46,10 @@ jobs:
 
     - name: Test version with git tag
       run: |
-        git tag -a v1.2.3 -m "Test version"
+        git tag -a v99.98.96 -m "Test version"
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [ "$VERSION" != "v1.2.3" ]; then
-          echo "Version mismatch. Expected v1.2.3, got $VERSION"
+        if [ "$VERSION" != "v99.98.97" ]; then
+          echo "Version mismatch. Expected v99.98.97, got $VERSION"
           exit 1
         fi
 
@@ -59,16 +59,16 @@ jobs:
         git add test.txt
         git commit -m "Test commit"
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [[ ! "$VERSION" =~ ^v1\.2\.3\+[0-9]+$ ]]; then
-          echo "Version mismatch. Expected v1.2.3+<number>, got $VERSION"
+        if [[ ! "$VERSION" =~ ^v99\.98\.97\+[0-9]+$ ]]; then
+          echo "Version mismatch. Expected v99.98.97+<number>, got $VERSION"
           exit 1
         fi
 
     - name: Test version without git tag
       run: |
-        git tag -d v1.2.3
+        git tag -d v99.98.97
         VERSION=$(poetry run python -c "from hello_world import __version__; print(__version__)")
-        if [ "$VERSION" != "0.1.0" ]; then
-          echo "Version mismatch. Expected 0.1.0, got $VERSION"
+        if [ "$VERSION" != "0.0.0+placeholder" ]; then
+          echo "Version mismatch. Expected 0.0.0+placeholder, got $VERSION"
           exit 1
         fi
