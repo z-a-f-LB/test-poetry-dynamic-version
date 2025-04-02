@@ -23,7 +23,13 @@ style = "semver"
 pattern = "default-unprefixed"
 
 [tool.poetry-dynamic-versioning.substitution]
-files = ["*.py", "*/__init__.py", "*/__version__.py", "*/_version.py"]
+files = [
+    "*.py",
+    "*/__init__.py",
+    "*/__version__.py",
+    "*/_version.py",
+    "*/another_submodule.py",
+]
 patterns = [
     '''(__version__\s*(?::.*?)?=\s*['"])[^'"]*(['"])''',
     { value = '''(__version_tuple__\s*(?::.*?)?=\s*\()[^)]*(\))''', mode = "tuple" },
